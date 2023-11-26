@@ -1,0 +1,26 @@
+{% extends "main_unauthorized.html" %}
+
+{% block title %} Заметки {% endblock %}
+
+{% block body %}
+
+    <div class="login-form">
+        <form id="login-form" method="POST">
+            <img class="mb-4" src="/static/icon.svg" alt="" width="70" height="70">
+            <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" name="floatingInput" placeholder="text">
+                <label for="floatingInput">Логин</label>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" class="form-control" name="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Пароль</label>
+            </div>
+        </form>
+        <button form="login-form" class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+        <p class="mt-5 mb-3 text-body-secondary">© 2023</p>
+    </div>
+
+{% endblock %}

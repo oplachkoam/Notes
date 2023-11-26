@@ -1,0 +1,137 @@
+{% extends "main_authorized.html" %}
+
+{% block body %}
+
+    <div class="notes-grid" id="notes_grid"></div>
+    <div class="note-editing" id="note-editing"></div>
+
+    <script>
+
+        var notesArray = {{ data_array | tojson}};
+        var numberValue = {{ number }};
+        var notes = {};
+        var notesGrid = document.getElementById('notes_grid');
+        var noteEditing = document.getElementById('note-editing');
+
+        function delNotes() {
+            for (let i = 0; i < numberValue; i++) {
+                notesGrid.removeChild(notes[i]);
+            }
+            notes = {};
+        }
+
+        var addButton = document.createElement('button');
+        addButton.class = "btn btn-success rounded-pill px-3";
+        addButton.innerText = "Создать заметку";
+
+        addButton.addEventListener('click', function () {
+            delNotes();
+            notesGrid.removeChild(addButton);
+
+            var newNote = document.createElement('div');
+            var new_text;
+            let data = {};
+            newNote.className = "opened-note";
+            newNote.contentEditable = "true";
+            noteEditing.appendChild(newNote)
+
+            var saveButton = document.createElement('button');
+            saveButton.className = "btn btn-primary w-100 py-2";
+            saveButton.innerText = "Сохранить";
+            saveButton.addEventListener('click', function () {
+                new_text = newNote.textContent;
+                data = {"number": "None", "text": new_text};
+                var xhr = new XMLHttpRequest();
+                var json_data = JSON.stringify(data);
+                xhr.open("POST", "/notes", false);
+                xhr.send(json_data);
+                noteEditing.removeChild(deleteButton)
+                noteEditing.removeChild(saveButton)
+                openNotes();
+                location.reload();
+            });
+
+            var deleteButton = document.createElement('button');
+            deleteButton.className = "btn btn-danger rounded-pill px-3";
+            deleteButton.innerText = "Назад";
+            deleteButton.addEventListener('click', function () {
+                data = {"number": "None", "text": "None"};
+                var xhr = new XMLHttpRequest();
+                var json_data = JSON.stringify(data);
+                xhr.open("POST", "/notes", false);
+                xhr.send(json_data);
+                noteEditing.removeChild(deleteButton);
+                noteEditing.removeChild(saveButton);
+                openNotes();
+                location.reload();
+            });
+
+            noteEditing.appendChild(deleteButton);
+            noteEditing.appendChild(saveButton);
+        });
+
+        notesGrid.appendChild(addButton);
+
+        function openNotes() {
+            for (let i = 0; i < numberValue; i++) {
+
+                var note = document.createElement('div');
+                note.className = "notes-preview";
+                note.contentEditable = "false";
+                note.textContent = notesArray[i.toString()];
+
+                note.addEventListener('click', function () {
+                    delNotes();
+                    notesGrid.removeChild(addButton);
+
+                    var openedNote = document.createElement('div');
+                    var new_text;
+                    let data = {};
+                    openedNote.className = "opened-note";
+                    openedNote.contentEditable = "true";
+                    openedNote.textContent = notesArray[i.toString()];
+                    noteEditing.appendChild(openedNote);
+
+                    var saveButton = document.createElement('button');
+                    saveButton.className = "btn btn-primary w-100 py-2";
+                    saveButton.innerText = "Сохранить";
+                    saveButton.addEventListener('click', function () {
+                        new_text = openedNote.textContent;
+                        data = {"number": i, "text": new_text};
+                        var xhr = new XMLHttpRequest();
+                        var json_data = JSON.stringify(data);
+                        xhr.open("POST", "/notes", false);
+                        xhr.send(json_data);
+                        noteEditing.removeChild(deleteButton)
+                        noteEditing.removeChild(saveButton)
+                        openNotes();
+                        location.reload();
+                    });
+
+                    var deleteButton = document.createElement('button');
+                    deleteButton.className = "btn btn-danger rounded-pill px-3";
+                    deleteButton.innerText = "Удалить";
+                    deleteButton.addEventListener('click', function () {
+                        data = {"number": i, "text": "None"};
+                        var xhr = new XMLHttpRequest();
+                        var json_data = JSON.stringify(data);
+                        xhr.open("POST", "/notes", false);
+                        xhr.send(json_data);
+                        noteEditing.removeChild(deleteButton);
+                        noteEditing.removeChild(saveButton);
+                        openNotes();
+                        location.reload();
+                    });
+
+                    noteEditing.appendChild(deleteButton);
+                    noteEditing.appendChild(saveButton);
+                });
+                notes[i] = note;
+                notesGrid.appendChild(note);
+            }
+        }
+
+        openNotes();
+    </script>
+
+{% endblock %}
