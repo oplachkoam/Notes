@@ -13,8 +13,12 @@ app = flask.Flask(__name__)
 
 database_cursor = database.cursor()
 
-# database_cursor.execute("""CREATE TABLE users (login text, name text, password text)""")
-# database_cursor.execute("""CREATE TABLE users_notes (login text, note_text text, time integer)""")
+if len(database_cursor.execute(
+        """SELECT name FROM sqlite_master WHERE type='table' AND name='users'""").fetchall()) == 0:
+    database_cursor.execute("""CREATE TABLE users (login text, name text, password text)""")
+if len(database_cursor.execute(
+        """SELECT name FROM sqlite_master WHERE type='table' AND name='users_notes'""").fetchall()) == 0:
+    database_cursor.execute("""CREATE TABLE users_notes (login text, note_text text, time integer)""")
 
 database.commit()
 
