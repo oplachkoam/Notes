@@ -1,0 +1,30 @@
+{% extends "main_authorized.html" %}
+
+{% block title %} Заметки {% endblock %}
+
+{% block body %}
+
+    <div class="login-form">
+        <form id="account-form" method="POST">
+            <div class="align-content-center">
+                <img class="mb-4" src="/static/icon.svg" alt="" width="70" height="70">
+                <h1 class="h3 mb-3 fw-normal">Ваши данные</h1>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="login" placeholder="text">
+                <label for="login">{{ login }}</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="name" placeholder="text">
+                <label for="name">{{ name }}</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" name="password" placeholder="password">
+            </div>
+        </form>
+        <p></p>
+        <button form="account-form" class="btn btn-primary w-100 py-2" type="submit">Сохранить изменения</button>
+        <p class="mt-5 mb-3 text-body-secondary">© 2023</p>
+    </div>
+
+{% endblock %}
